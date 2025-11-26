@@ -10,6 +10,7 @@ pipeline {
         stage('Cloning Git') {
             steps {
                 git branch: 'main', url: 'https://github.com/Poogast123/jenkis-setup'
+            }
         }
 
         stage('Building image') {
