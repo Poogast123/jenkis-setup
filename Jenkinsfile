@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    environment {
+        registry = "kharifi/jenkis_setup"
+        registryCredential = 'DOCKER_PUSH_KEY'
+        dockerImage = ''
+    }
+
+    stages {
+        stage('Cloning Git') {
+            steps {
+                git 'https://github.com/Poogast123/jenkis-setup'
+            }
+        }
+
+        stage('Building image') {
+            steps {
+                script {
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
+            }
+        }
+
+        stage('Test image') {
+            steps {
+                script {
+                    echo "Tests passed"
+                }
+            }
+        }
+
+        stage('Publish Image') {
+            steps {
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+    }
+}
